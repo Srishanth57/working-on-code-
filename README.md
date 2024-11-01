@@ -1,3 +1,3 @@
 # working-on-code-
 
-[Edit in StackBlitz next generation editor ⚡️](https://stackblitz.com/~/github.com/Srishanth57/working-on-code-)
+[This is mood tracker website which helps analyse your mood](https://stackblitz.com/~/github.com/Srishanth57/working-on-code-)
