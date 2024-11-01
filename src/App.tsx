@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { format } from 'date-fns';
-import { Calendar as CalendarIcon, BarChart } from 'lucide-react';
+import { Calendar as CalendarIcon, BarChart, Music } from 'lucide-react';
 import { MoodSelector } from './components/MoodSelector';
 import { MoodChart } from './components/MoodChart';
 import { MoodCalendar } from './components/MoodCalendar';
+import { MusicPage } from './components/MusicPage'; // New component for the music page
 import type { Mood, MoodEntry } from './types';
 
 function App() {
@@ -13,7 +14,7 @@ function App() {
   });
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [note, setNote] = useState('');
-  const [view, setView] = useState<'calendar' | 'chart'>('calendar');
+  const [view, setView] = useState<'calendar' | 'chart' | 'music'>('calendar'); // Add 'music' as a new view
 
   const dateStr = format(selectedDate, 'yyyy-MM-dd');
   const selectedEntry = entries.find(entry => entry.date === dateStr);
@@ -57,39 +58,40 @@ function App() {
               >
                 <BarChart className="w-6 h-6 text-purple-600" />
               </button>
+              <button
+                onClick={() => setView('music')}
+                className={`p-2 rounded-lg ${
+                  view === 'music' ? 'bg-purple-100' : 'hover:bg-gray-100'
+                }`}
+              >
+                <Music className="w-6 h-6 text-purple-600" />
+              </button>
             </div>
           </div>
 
-          <div className="mb-8">
-            <h2 className="text-xl font-semibold text-gray-700 mb-4">
-              {format(selectedDate, 'MMMM d, yyyy')}
-            </h2>
-            <MoodSelector
-              selectedMood={selectedEntry?.mood || null}
-              onMoodSelect={handleMoodSelect}
-            />
-          </div>
-
-          <div className="mb-8">
-            <textarea
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-              placeholder="Add a note about your day..."
-              className="w-full p-4 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-              rows={3}
-            />
-          </div>
-
-          <div className="bg-gray-50 rounded-xl p-6">
-            {view === 'calendar' ? (
-              <MoodCalendar
-                entries={entries}
-                onDateSelect={setSelectedDate}
+          {view === 'calendar' && (
+            <>
+              <h2 className="text-xl font-semibold text-gray-700 mb-4">
+                {format(selectedDate, 'MMMM d, yyyy')}
+              </h2>
+              <MoodSelector
+                selectedMood={selectedEntry?.mood || null}
+                onMoodSelect={handleMoodSelect}
               />
-            ) : (
-              <MoodChart entries={entries} />
-            )}
-          </div>
+              <textarea
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                placeholder="Add a note about your day..."
+                className="w-full p-4 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                rows={3}
+              />
+              <MoodCalendar entries={entries} onDateSelect={setSelectedDate} />
+            </>
+          )}
+
+          {view === 'chart' && <MoodChart entries={entries} />}
+
+          {view === 'music' && <MusicPage />} {/* New music component */}
         </div>
       </div>
     </div>
